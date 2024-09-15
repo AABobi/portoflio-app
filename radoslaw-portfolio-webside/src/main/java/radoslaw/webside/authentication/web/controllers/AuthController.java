@@ -22,12 +22,12 @@ public class AuthController {
 
     @PostMapping(path = "/login")
     public ResponseEntity<?> loginUser(@RequestBody UserLoginDTO userLoginDTO){
-        return userService.authUser(userLoginDTO.getEmail());
+        return userService.authUser(userLoginDTO.getEmail(), userLoginDTO.getPassword());
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<?> createUser(@RequestBody UserLoginDTO userLoginDTO){
-        return userService.authUser(userLoginDTO.getEmail());
+    public ResponseEntity<?> createUser(@RequestBody User User) {
+         return userService.createUser(User);
     }
 
     @GetMapping(path = "/test1")

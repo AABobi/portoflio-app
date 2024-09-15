@@ -2,14 +2,9 @@ package radoslaw.webside.authentication.utils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
-import java.util.Arrays;
-import java.util.Base64;
+
 
 public class HashPassword {
 
@@ -24,8 +19,8 @@ public class HashPassword {
     /**
      * Generate a hash for a password
      */
-    public static void validatePassword(String password, String hashedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static boolean validatePassword(String password, String hashedPassword) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        passwordEncoder.matches(password,hashedPassword);
+        return passwordEncoder.matches(password,hashedPassword);
     }
 }
