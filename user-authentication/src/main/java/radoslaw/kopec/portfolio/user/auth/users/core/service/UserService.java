@@ -31,12 +31,14 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public String authenticateUser(String message) throws JsonProcessingException {
-       // UserLoginRequest userLoginRequest = objectMapper.readValue(message,UserLoginRequest.class);
-        var userLoginRequest = readJsonValue(message,UserLoginRequest.class);
-        var user = userRepository.findByEmail(userLoginRequest.email()).orElseThrow( () -> new NoSuchElementException("User is not found"));
-        userDTO.createUserDTO(user);
-
-        return JwtUtil.generateToken(userDTO.getEmail());
+    public String authenticateUser(String message) throws NoSuchElementException {
+        try {
+            var userLoginRequest = readJsonValue(message,UserLoginRequest.class);
+            var user = userRepository.findByEmail(userLoginRequest.email()).orElseThrow( () -> new NoSuchElementException("User is not found"));
+            userDTO.createUserDTO(user);
+            return JwtUtil.generateToken(userDTO.getEmail());
+        } catch (RuntimeException e){
+            return e.getMessage();
+        }
     }
 }
