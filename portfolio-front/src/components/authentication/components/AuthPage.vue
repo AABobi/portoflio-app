@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ElButton } from 'element-plus'
-
+import { ElButton } from "element-plus";
 </script>
 
 <template>
-  <section>Test
-  <ElButton>asdsd</ElButton>
+  <section>
+    Test
+    <ElButton>asdsdaaaa</ElButton>
   </section>
 </template>
 
