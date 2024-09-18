@@ -1,17 +1,14 @@
 package radoslaw.webside.authentication.web.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import radoslaw.webside.authentication.core.models.User;
 import radoslaw.webside.authentication.core.services.UserService;
-import radoslaw.webside.authentication.utils.HashPassword;
 import radoslaw.webside.authentication.web.dtos.UserLoginDTO;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 @RestController
 @RequestMapping(path = "/auth")
@@ -26,17 +23,7 @@ public class AuthController {
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<?> createUser(@RequestBody User User) {
-         return userService.createUser(User);
-    }
-
-    @GetMapping(path = "/test1")
-    public String test1() {
-        return "aa";
-    }
-
-    @GetMapping(path = "/test11")
-    public String test11() {
-        return "aa12";
+    public ResponseEntity<?> createUser(@Valid @RequestBody User user, BindingResult validationResult) throws BindException {
+         return userService.createUser(user,validationResult);
     }
 }

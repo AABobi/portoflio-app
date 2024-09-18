@@ -5,17 +5,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import radoslaw.webside.authentication.core.models.Role;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.server.ResponseStatusException;
 import radoslaw.webside.authentication.core.models.User;
 import radoslaw.webside.authentication.core.models.enums.Roles;
 import radoslaw.webside.authentication.core.repositories.RoleRepository;
 import radoslaw.webside.authentication.core.repositories.UserRepository;
 import radoslaw.webside.authentication.utils.HashPassword;
 import radoslaw.webside.authentication.utils.JwtUtil;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 @Service
 public class UserService {
@@ -41,21 +39,23 @@ public class UserService {
                 .orElseGet(() -> new ResponseEntity<>("Email or password doesn't match", HttpStatus.NOT_FOUND));
     }
 
-    public ResponseEntity<String> createUser(@RequestBody User user){
-        var isUserExist = userRepository.findUserByEmail(user.getEmail()).isPresent();
-
-        if(isUserExist) {
-            return new ResponseEntity<>("User already exist",HttpStatus.CONFLICT);
+    public ResponseEntity<String> createUser(User user, BindingResult bindingResult) throws BindException {
+        if(bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
         }
-        var role = roleRepository.findByRole(Roles.USER);
+        userRepository.findUserByEmail(user.getEmail())
+                .or(() -> userRepository.findUserByName(user.getName()))
+                .ifPresent(existingUser -> {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Email or name is already taken");
+        });
 
-        if(role.isPresent()) {
-            user.setRole(role.get());
-            user.setPassword(HashPassword.generateHashPassword(user.getPassword()));
-            userRepository.save(user);
-            return new ResponseEntity<>("User created", HttpStatus.CREATED);
-        } else {
-            throw new IllegalArgumentException("Role USER not found");
-        }
+        return roleRepository.findByRole(Roles.USER)
+                .map(role -> {
+                    user.setRole(role);
+                    user.setPassword(HashPassword.generateHashPassword(user.getPassword()));
+                    userRepository.save(user);
+                    return new ResponseEntity<>("User created", HttpStatus.CREATED);
+                })
+                .orElseThrow(() -> new IllegalArgumentException("Role USER not found"));
     }
 }

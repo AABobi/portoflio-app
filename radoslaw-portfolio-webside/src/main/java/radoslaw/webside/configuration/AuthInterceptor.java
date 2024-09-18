@@ -20,13 +20,10 @@ public class AuthInterceptor implements HandlerInterceptor {
         // Extract the Authorization header
         String authToken = request.getHeader("Authorization");
         var a = request.getHeaderNames();
-        System.out.println("HEADERS NAMES");
-        System.out.println(authToken);
 
         // Perform token validation (custom logic for token validation)
         var email = JwtUtil.validateToken(authToken).getSubject();
-        System.out.println("JWT");
-        System.out.println(email);
+
         if (authToken != null && JwtUtil.isTokenValid(authToken,email)) {
             return true; // Continue to the endpoint if the token is valid
         }
