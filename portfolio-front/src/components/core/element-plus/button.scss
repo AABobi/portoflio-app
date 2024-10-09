@@ -3,6 +3,12 @@
   text-transform: uppercase;
   margin-top: 5px;
   font-weight: bold;
-  color: red;
-  border-bottom: 5px solid red;
+  border: none;
+
+  &:hover,
+  &:active,
+  &focus {
+    color: #606266;
+    background-color: #dcdfe6;
+  }
 }
