@@ -1,25 +1,32 @@
 <script setup lang="ts">
-import { Button } from "@/components/core/components/index.ts"
-import {defineProps} from "vue";
+import { Button } from "@/components/core/components/index.ts";
+import { defineProps } from "vue";
 
-defineProps({
+const props = defineProps({
   buttonName: {
     type: Array,
-    required: true,
+    required: false,
   },
   routePath: {
     type: Array,
-    required: true,
+    required: false,
     default: () => [],
-    validator: value => value.every(item => typeof item === 'function')
-  }
-})
+    validator: (value) => value.every((item) => typeof item === "function"),
+  },
+});
 </script>
 
 <template>
-  <header class="RouterHeader">
-   <Button class="RouterHeader__button" v-for="(name, index) in buttonName" :key="index" @click="routePath[index]">{{ name }}</Button>
+  <header class="RouterHeader" v-if="props.buttonName">
+    <Button
+      class="RouterHeader__button"
+      v-for="(name, index) in buttonName"
+      :key="index"
+      @click="routePath[index]"
+      >{{ name }}
+    </Button>
   </header>
+  <header v-else class="RouterHeader" />
 </template>
 
 <style scoped lang="scss">

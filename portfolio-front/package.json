@@ -71,6 +71,11 @@
     "not ie 11"
   ],
   "jest": {
+    "roots": ["<rootDir>/tests/unit", "<rootDir>/src/components/home-page/components"],
+    "testMatch": [
+      "**/tests/unit/**/*.spec.[jt]s?(x)",
+      "**/src/components/home-page/components/**/*.spec.[jt]s?(x)"
+    ],
     "preset": "@vue/cli-plugin-unit-jest/presets/typescript"
   }
 }

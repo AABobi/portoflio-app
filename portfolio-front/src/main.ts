@@ -3,8 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import "element-plus/dist/index.css";
 import "../src/components/core/index.scss";
-import { createPinia } from 'pinia'
-import '../src/assets/styles.scss';
+import { createPinia } from "pinia";
 
 /*
 const pinia = createPinia()
@@ -16,11 +15,11 @@ createApp(App)
 */
 
 function main() {
-    const {mount, use} = createApp(App);
-    const pinia = createPinia()
-    use(router)
-    use(pinia)
-    mount("#app");
+  const { mount, use } = createApp(App);
+  const pinia = createPinia();
+  use(router);
+  use(pinia);
+  mount("#app");
 }
 
 main();
